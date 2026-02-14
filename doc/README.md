@@ -20,6 +20,11 @@
   <a href="../README.md">English Documentation</a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/MikeCheng1208/PDFedit/releases/tag/v1.0.0">下載 macOS 版</a> ·
+  <a href="https://github.com/MikeCheng1208/PDFedit/releases/tag/v1.0.0">下載 Windows 版</a>
+</p>
+
 ---
 
 ## 功能特色
