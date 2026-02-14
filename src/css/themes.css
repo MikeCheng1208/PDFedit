@@ -1,0 +1,113 @@
+/* PDFedit Theme Variables */
+
+:root {
+  /* Light Theme (Default) */
+  --bg-primary: #FEFBF6;
+  --bg-secondary: #F5F0E8;
+  --bg-tertiary: #EDE8E0;
+  --bg-elevated: #FFFFFF;
+
+  --text-primary: #2D2D2D;
+  --text-secondary: #5A5A5A;
+  --text-tertiary: #8A8A8A;
+  --text-inverse: #FFFFFF;
+
+  --accent: #E07A2F;
+  --accent-hover: #C96A25;
+  --accent-light: rgba(224, 122, 47, 0.1);
+  --accent-medium: rgba(224, 122, 47, 0.2);
+
+  --border-light: rgba(45, 45, 45, 0.08);
+  --border-medium: rgba(45, 45, 45, 0.15);
+  --border-strong: rgba(45, 45, 45, 0.25);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  --overlay: rgba(45, 45, 45, 0.5);
+
+  /* Paper texture for light theme */
+  --bg-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+
+  /* Status colors */
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --error: #F44336;
+  --info: #2196F3;
+
+  /* Toolbar specific */
+  --toolbar-bg: #FEFBF6;
+  --toolbar-hover: rgba(224, 122, 47, 0.08);
+  --toolbar-active: rgba(224, 122, 47, 0.15);
+
+  /* Thumbnail */
+  --thumbnail-bg: #FFFFFF;
+  --thumbnail-border: rgba(45, 45, 45, 0.1);
+  --thumbnail-active: #E07A2F;
+
+  /* Scrollbar */
+  --scrollbar-track: rgba(45, 45, 45, 0.05);
+  --scrollbar-thumb: rgba(45, 45, 45, 0.2);
+  --scrollbar-thumb-hover: rgba(45, 45, 45, 0.3);
+}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --bg-primary: #1A1A1E;
+  --bg-secondary: #232328;
+  --bg-tertiary: #2C2C32;
+  --bg-elevated: #2A2A30;
+
+  --text-primary: #E8E6E3;
+  --text-secondary: #A8A6A3;
+  --text-tertiary: #6A6866;
+  --text-inverse: #1A1A1E;
+
+  --accent: #F5A623;
+  --accent-hover: #E09518;
+  --accent-light: rgba(245, 166, 35, 0.1);
+  --accent-medium: rgba(245, 166, 35, 0.2);
+
+  --border-light: rgba(232, 230, 227, 0.06);
+  --border-medium: rgba(232, 230, 227, 0.12);
+  --border-strong: rgba(232, 230, 227, 0.2);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  /* Subtle gradient for dark theme */
+  --bg-texture: linear-gradient(180deg, #1A1A1E 0%, #1E1E24 100%);
+
+  /* Toolbar specific */
+  --toolbar-bg: #1F1F24;
+  --toolbar-hover: rgba(245, 166, 35, 0.1);
+  --toolbar-active: rgba(245, 166, 35, 0.2);
+
+  /* Thumbnail */
+  --thumbnail-bg: #2A2A30;
+  --thumbnail-border: rgba(232, 230, 227, 0.08);
+  --thumbnail-active: #F5A623;
+
+  /* Scrollbar */
+  --scrollbar-track: rgba(232, 230, 227, 0.05);
+  --scrollbar-thumb: rgba(232, 230, 227, 0.15);
+  --scrollbar-thumb-hover: rgba(232, 230, 227, 0.25);
+}
+
+/* Theme transition */
+* {
+  transition: background-color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Don't transition colors for interactive elements that need instant feedback */
+button, input, select, textarea {
+  transition: background-color 0.15s ease,
+              border-color 0.15s ease,
+              transform 0.1s ease;
+}

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; worker-src 'self' blob:;">
+  <title>PDFedit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/signature.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Title Bar -->
+    <header class="title-bar">
+      <div class="title-bar-drag-region"></div>
+      <div class="title-bar-content">
+        <div class="app-logo">
+          <span class="logo-icon">◈</span>
+          <span class="logo-text">PDFedit</span>
+        </div>
+        <div class="title-bar-actions">
+          <button class="btn btn-secondary" id="btn-open" data-i18n="open">開啟</button>
+          <button class="btn btn-secondary" id="btn-save" data-i18n="save" disabled>儲存</button>
+        </div>
+        <div class="title-bar-spacer"></div>
+        <div class="title-bar-settings">
+          <button class="icon-btn" id="btn-theme" title="切換主題">
+            <span class="icon-sun">☀️</span>
+            <span class="icon-moon">🌙</span>
+          </button>
+          <button class="icon-btn" id="btn-lang" title="切換語言">
+            <span class="lang-label">中</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar" id="tab-bar" style="display: none;">
+      <div class="tab-list" id="tab-list">
+        <!-- Tab items rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <nav class="toolbar" id="toolbar">
+      <div class="toolbar-group">
+        <button class="tool-btn active" data-tool="select" data-i18n-title="toolSelect" title="選取">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+            <path d="M13 13l6 6"/>
+          </svg>
+        </button>
+        <button class="tool-btn" data-tool="text" data-i18n-title="toolText" title="文字">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="4 7 4 4 20 4 20 7"/>
+            <line x1="9" y1="20" x2="15" y2="20"/>
+            <line x1="12" y1="4" x2="12" y2="20"/>
+          </svg>
+        </button>
+        <button class="tool-btn" data-tool="image" data-i18n-title="toolImage" title="圖片">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </button>
+        <div class="tool-dropdown">
+          <button class="tool-btn" data-tool="draw" data-i18n-title="toolDraw" title="繪圖">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+              <path d="M2 2l7.586 7.586"/>
+              <circle cx="11" cy="11" r="2"/>
+            </svg>
+            <span class="dropdown-arrow">▾</span>
+          </button>
+          <div class="dropdown-menu" id="draw-menu">
+            <button class="dropdown-item active" data-shape="freehand" data-i18n="freehand">自由繪製</button>
+            <button class="dropdown-item" data-shape="line" data-i18n="line">直線</button>
+            <button class="dropdown-item" data-shape="rectangle" data-i18n="rectangle">矩形</button>
+            <button class="dropdown-item" data-shape="circle" data-i18n="circle">圓形</button>
+            <button class="dropdown-item" data-shape="arrow" data-i18n="arrow">箭頭</button>
+          </div>
+        </div>
+        <div class="draw-controls" id="draw-controls">
+          <div class="toolbar-separator"></div>
+          <div class="color-picker-wrapper">
+            <input type="color" id="color-picker" value="#E07A2F" title="選擇顏色">
+            <span class="color-preview" style="background-color: #E07A2F"></span>
+          </div>
+          <select id="stroke-width" class="toolbar-select" title="線條粗細">
+            <option value="1">1px</option>
+            <option value="2" selected>2px</option>
+            <option value="4">4px</option>
+            <option value="6">6px</option>
+            <option value="8">8px</option>
+          </select>
+        </div>
+        <button class="tool-btn" data-tool="highlight" data-i18n-title="toolHighlight" title="螢光筆">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11l-6 6v3h9l3-3"/>
+            <path d="M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>
+          </svg>
+        </button>
+        <button class="tool-btn" data-tool="signature" data-i18n-title="toolSignature" title="簽名">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 17c3.5-3.5 5-6 5-8 0-3-2.5-3-2.5 0 0 4 7 3 7 0s-2-5-4.5-5c-1.5 0-2.5.5-3.5 2"/>
+            <path d="M17 17h4"/>
+            <path d="M17 21h4"/>
+            <path d="M14 3v4"/>
+            <path d="M12 5h4"/>
+          </svg>
+        </button>
+        <button class="tool-btn" data-tool="eraser" data-i18n-title="toolEraser" title="橡皮擦">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 20H7L3 16c-.8-.8-.8-2 0-2.8L14.8 1.4c.8-.8 2-.8 2.8 0l6 6c.8.8.8 2 0 2.8L12 22"/>
+            <path d="M6 12l8 8"/>
+          </svg>
+        </button>
+      </div>
+      <div class="toolbar-separator"></div>
+      <div class="toolbar-group">
+        <div class="tool-dropdown">
+          <button class="tool-btn" id="btn-page-manage" data-i18n-title="pageManage" title="頁面管理">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="9" rx="1"/>
+              <rect x="14" y="3" width="7" height="9" rx="1"/>
+              <rect x="3" y="15" width="7" height="6" rx="1"/>
+              <rect x="14" y="15" width="7" height="6" rx="1"/>
+            </svg>
+            <span class="dropdown-arrow">▾</span>
+          </button>
+          <div class="dropdown-menu" id="page-menu">
+            <button class="dropdown-item" id="btn-rotate-cw" data-i18n="rotateCW">順時針旋轉 90°</button>
+            <button class="dropdown-item" id="btn-rotate-ccw" data-i18n="rotateCCW">逆時針旋轉 90°</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="btn-delete-page" data-i18n="deletePage">刪除頁面</button>
+            <button class="dropdown-item" id="btn-duplicate-page" data-i18n="duplicatePage">複製頁面</button>
+            <button class="dropdown-item" id="btn-insert-blank" data-i18n="insertBlank">插入空白頁</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="btn-merge-pdf" data-i18n="mergePDF">合併 PDF</button>
+            <button class="dropdown-item" id="btn-split-pdf" data-i18n="splitPDF">分割 PDF</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Sidebar - Page Thumbnails -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <span data-i18n="pages">頁面</span>
+        </div>
+        <div class="thumbnail-container" id="thumbnail-container">
+          <!-- Thumbnails will be rendered here -->
+        </div>
+      </aside>
+
+      <!-- PDF Viewer -->
+      <div class="viewer-container" id="viewer-container">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcome-screen">
+          <div class="welcome-content">
+            <div class="welcome-icon">◈</div>
+            <h2 data-i18n="welcomeTitle">歡迎使用 PDFedit</h2>
+            <p data-i18n="welcomeDesc">開啟 PDF 檔案開始編輯，或拖放檔案至此處</p>
+            <button class="btn btn-primary" id="btn-open-welcome" data-i18n="openFile">開啟檔案</button>
+          </div>
+        </div>
+
+        <!-- PDF Canvas Container -->
+        <div class="pdf-canvas-container" id="pdf-canvas-container" style="display: none;">
+          <canvas id="pdf-canvas"></canvas>
+          <div id="fabric-container"></div>
+          <!-- Floating Text Toolbar -->
+          <div class="text-toolbar" id="text-toolbar" style="display: none;">
+            <div class="text-toolbar-inner">
+              <div class="text-toolbar-fontsize">
+                <input type="number" id="text-toolbar-size" class="text-toolbar-input" value="16" min="8" max="200">
+              </div>
+              <div class="text-toolbar-separator"></div>
+              <select id="text-toolbar-font" class="text-toolbar-select">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="DM Sans, sans-serif">DM Sans</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Courier New, monospace">Courier New</option>
+              </select>
+              <div class="text-toolbar-separator"></div>
+              <button class="text-toolbar-btn" id="text-toolbar-bold" title="Bold">B</button>
+              <div class="text-toolbar-separator"></div>
+              <div class="text-toolbar-color-wrapper">
+                <input type="color" id="text-toolbar-color" value="#E07A2F" title="文字顏色">
+                <span class="text-toolbar-color-preview" id="text-toolbar-color-preview" style="background-color: #E07A2F"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="status-bar">
+      <div class="status-left">
+        <span id="page-info" data-i18n-template="pageInfo">第 <span id="current-page">1</span> 頁 / 共 <span id="total-pages">1</span> 頁</span>
+      </div>
+      <div class="status-center">
+        <button class="nav-btn" id="btn-prev-page" disabled>◀</button>
+        <button class="nav-btn" id="btn-next-page" disabled>▶</button>
+      </div>
+      <div class="status-right">
+        <button class="zoom-btn" id="btn-zoom-out">−</button>
+        <span id="zoom-level">100%</span>
+        <button class="zoom-btn" id="btn-zoom-in">+</button>
+        <button class="zoom-btn" id="btn-zoom-fit" data-i18n-title="fitWidth" title="適合寬度">⊡</button>
+      </div>
+    </footer>
+
+    <!-- Signature Panel (Hidden by default) -->
+    <div class="signature-panel" id="signature-panel" style="display: none;">
+      <div class="signature-panel-header">
+        <h3 data-i18n="signature">電子簽名</h3>
+        <button class="close-btn" id="btn-close-signature">×</button>
+      </div>
+      <div class="signature-tabs">
+        <button class="tab-btn active" data-tab="draw" data-i18n="drawSign">手寫簽名</button>
+        <button class="tab-btn" data-tab="upload" data-i18n="uploadSign">上傳圖片</button>
+        <button class="tab-btn" data-tab="saved" data-i18n="savedSign">已儲存</button>
+      </div>
+      <div class="signature-content">
+        <!-- Draw Tab -->
+        <div class="tab-content active" id="tab-draw">
+          <div class="signature-controls">
+            <div class="color-picker-wrapper">
+              <input type="color" id="signature-color" value="#2D2D2D">
+              <span class="color-preview" id="signature-color-preview" style="background-color: #2D2D2D"></span>
+            </div>
+            <div class="signature-stroke-slider">
+              <input type="range" id="signature-stroke-width" min="1" max="20" value="2">
+              <span class="signature-stroke-label" id="signature-stroke-label">2px</span>
+            </div>
+          </div>
+          <canvas id="signature-canvas"></canvas>
+          <div class="signature-actions">
+            <button class="btn btn-secondary" id="btn-clear-signature" data-i18n="clear">清除</button>
+            <button class="btn btn-secondary" id="btn-save-signature" data-i18n="saveSign">儲存簽名</button>
+            <button class="btn btn-primary" id="btn-use-signature" data-i18n="useSign">使用簽名</button>
+          </div>
+        </div>
+        <!-- Upload Tab -->
+        <div class="tab-content" id="tab-upload">
+          <div class="upload-area" id="upload-area">
+            <div class="upload-placeholder">
+              <span class="upload-icon">📁</span>
+              <p data-i18n="dragOrClick">拖放圖片或點擊選擇</p>
+            </div>
+            <img id="upload-preview" style="display: none;">
+          </div>
+          <div class="signature-actions">
+            <button class="btn btn-secondary" id="btn-select-image" data-i18n="selectImage">選擇圖片</button>
+            <button class="btn btn-primary" id="btn-use-uploaded" data-i18n="useSign" disabled>使用簽名</button>
+          </div>
+        </div>
+        <!-- Saved Tab -->
+        <div class="tab-content" id="tab-saved">
+          <div class="saved-signatures" id="saved-signatures">
+            <!-- Saved signatures will be rendered here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Input Modal -->
+    <div class="modal" id="text-modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="addText">新增文字</h3>
+          <button class="close-btn" id="btn-close-text-modal">×</button>
+        </div>
+        <div class="modal-body">
+          <textarea id="text-input" placeholder="輸入文字..." data-i18n-placeholder="enterText"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btn-cancel-text" data-i18n="cancel">取消</button>
+          <button class="btn btn-primary" id="btn-add-text" data-i18n="add">新增</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Split PDF Modal -->
+    <div class="modal" id="split-modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="splitPDF">分割 PDF</h3>
+          <button class="close-btn" id="btn-close-split-modal">×</button>
+        </div>
+        <div class="modal-body">
+          <label data-i18n="pageRange">頁面範圍（例如：1-3, 5, 7-10）</label>
+          <input type="text" id="split-range" placeholder="1-3, 5, 7-10">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btn-cancel-split" data-i18n="cancel">取消</button>
+          <button class="btn btn-primary" id="btn-confirm-split" data-i18n="split">分割</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unsaved Changes Modal -->
+    <div class="modal" id="unsaved-modal" style="display: none;">
+      <div class="modal-content unsaved-modal-content">
+        <div class="modal-header">
+          <h3 data-i18n="unsavedChanges">未儲存的變更</h3>
+          <button class="close-btn" id="btn-unsaved-cancel-x">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="unsaved-message">
+            <span data-i18n="unsavedMessage">檔案</span>
+            <strong id="unsaved-file-name"></strong>
+            <span data-i18n="unsavedMessage2">有未儲存的變更。是否要儲存？</span>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btn-unsaved-discard" data-i18n="discard">不儲存</button>
+          <button class="btn btn-secondary" id="btn-unsaved-cancel" data-i18n="cancel">取消</button>
+          <button class="btn btn-primary" id="btn-unsaved-save" data-i18n="save">儲存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay" style="display: none;">
+      <div class="loading-spinner"></div>
+      <span data-i18n="loading">載入中...</span>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+  </div>
+
+  <!-- Libraries -->
+  <script src="lib/fabric.min.js"></script>
+  <script>
+  // Fix Fabric.js v5.5.2 text measurement mismatch:
+  // Fabric measures each character at CACHE_FONT_SIZE (200px) then scales down,
+  // but renders full lines via ctx.fillText (shortCut path in _renderChars).
+  // This causes __charBounds widths to differ from actual rendered text widths,
+  // making both the bounding box AND selection highlight inaccurate.
+  // Fix: override measureLine() to scale __charBounds proportionally so they
+  // match the full-string measurement at actual fontSize.
+  (function() {
+    var originalMeasureLine = fabric.Text.prototype.measureLine;
+    fabric.Text.prototype.measureLine = function(lineIndex) {
+      var result = originalMeasureLine.call(this, lineIndex);
+
+      var lineText = this.textLines[lineIndex];
+      if (!lineText || lineText.length === 0 || result.width <= 0) return result;
+
+      // Measure full line at actual fontSize (matches browser native rendering)
+      var style = this.getCompleteStyleDeclaration(lineIndex, 0);
+      var ctx = this.getMeasuringContext();
+      ctx.save();
+      ctx.font = this._getFontDeclaration(style);
+      var actualWidth = ctx.measureText(lineText).width;
+      ctx.restore();
+
+      // Scale __charBounds proportionally so selection highlight matches text
+      if (actualWidth > 0 && Math.abs(result.width - actualWidth) > 0.5) {
+        var scale = actualWidth / result.width;
+        var bounds = this.__charBounds[lineIndex];
+        if (bounds) {
+          var numChars = this._textLines[lineIndex].length;
+          for (var i = 0; i < numChars; i++) {
+            bounds[i].left *= scale;
+            bounds[i].width *= scale;
+            bounds[i].kernedWidth *= scale;
+          }
+          // Update sentinel entry (cursor-at-end position)
+          if (bounds[numChars]) {
+            bounds[numChars].left = numChars > 0
+              ? bounds[numChars - 1].left + bounds[numChars - 1].width
+              : 0;
+          }
+        }
+        result.width = actualWidth;
+      }
+      return result;
+    };
+  })();
+  </script>
+  <script src="lib/pdf-lib.min.js"></script>
+
+  <!-- PDF.js and App Scripts -->
+  <script type="module">
+    // Load PDF.js using dynamic import
+    console.log('[PDFedit] Loading PDF.js...');
+    const pdfjsLib = await import('./lib/pdfjs/pdf.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = './lib/pdfjs/pdf.worker.mjs';
+    window.pdfjsLib = pdfjsLib;
+    console.log('[PDFedit] PDF.js loaded successfully');
+
+    // Verify libraries loaded
+    if (typeof fabric === 'undefined') {
+      throw new Error('Fabric.js not loaded');
+    }
+    if (typeof PDFLib === 'undefined') {
+      throw new Error('pdf-lib not loaded');
+    }
+    console.log('[PDFedit] All libraries verified');
+
+    // Wait for DOM and then load app scripts
+    const loadScript = (src) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          console.log(`[PDFedit] Loaded: ${src}`);
+          resolve();
+        };
+        script.onerror = (e) => {
+          console.error(`[PDFedit] Failed to load: ${src}`, e);
+          reject(new Error(`Failed to load ${src}`));
+        };
+        document.body.appendChild(script);
+      });
+    };
+
+    // Load scripts in order
+    await loadScript('js/i18n.js');
+    await loadScript('js/theme.js');
+    await loadScript('js/pdf-renderer.js');
+    await loadScript('js/canvas-layer.js');
+    await loadScript('js/signature.js');
+    await loadScript('js/page-manager.js');
+    await loadScript('js/pdf-editor.js');
+    await loadScript('js/ui-controller.js');
+    await loadScript('js/tab-manager.js');
+    await loadScript('js/app.js');
+
+    console.log('[PDFedit] All scripts loaded successfully');
+  </script>
+</body>
+</html>

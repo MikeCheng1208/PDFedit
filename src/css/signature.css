@@ -1,0 +1,265 @@
+/* Signature Panel Styles */
+
+.signature-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 480px;
+  max-width: 90%;
+  background: var(--bg-elevated);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.signature-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.signature-panel-header h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Signature Tabs */
+.signature-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 20px;
+}
+
+.tab-btn {
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+}
+
+.tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+}
+
+/* Tab Content */
+.signature-content {
+  padding: 20px;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Signature Controls */
+.signature-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.signature-stroke-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signature-stroke-slider input[type="range"] {
+  width: 100px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border-medium);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.signature-stroke-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+}
+
+.signature-stroke-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 30px;
+}
+
+/* Signature Canvas */
+#signature-canvas {
+  width: 100%;
+  height: 200px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  cursor: crosshair;
+}
+
+.signature-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Upload Area */
+.upload-area {
+  width: 100%;
+  height: 200px;
+  background: var(--bg-primary);
+  border: 2px dashed var(--border-medium);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+
+.upload-area:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.upload-area.drag-over {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.upload-placeholder {
+  text-align: center;
+}
+
+.upload-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.upload-placeholder p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+#upload-preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Saved Signatures */
+.saved-signatures {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.saved-signature-item {
+  position: relative;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.saved-signature-item:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.saved-signature-item.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+.saved-signature-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: contain;
+}
+
+.saved-signature-delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: var(--error);
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.saved-signature-item:hover .saved-signature-delete {
+  opacity: 1;
+}
+
+.saved-signature-delete:hover {
+  background: #D32F2F;
+}
+
+.no-signatures {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 32px;
+  color: var(--text-tertiary);
+}
+
+/* Signature overlay backdrop */
+.signature-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay);
+  z-index: 1999;
+}
