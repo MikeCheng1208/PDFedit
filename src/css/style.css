@@ -519,6 +519,7 @@ body {
   cursor: pointer;
   transition: all 0.15s ease;
   aspect-ratio: 3/4;
+  flex-shrink: 0;
 }
 
 .thumbnail:hover {

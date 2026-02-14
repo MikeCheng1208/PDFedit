@@ -293,7 +293,7 @@ class App {
 
       // Load pdf-lib document
       const { PDFDocument } = PDFLib;
-      const pdfLibDoc = await PDFDocument.load(bufferForEditor);
+      const pdfLibDoc = await PDFDocument.load(bufferForEditor, { ignoreEncryption: true });
       const originalBuffer = bufferForEditor instanceof ArrayBuffer
         ? bufferForEditor.slice(0)
         : bufferForEditor;

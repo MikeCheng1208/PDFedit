@@ -33,6 +33,7 @@
       "output": "dist"
     },
     "asar": true,
+    "npmRebuild": false,
     "files": [
       "main.js",
       "preload.js",

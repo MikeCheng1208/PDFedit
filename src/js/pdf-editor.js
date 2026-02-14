@@ -13,7 +13,7 @@ class PDFEditor {
 
   async loadPDF(arrayBuffer, filePath = null) {
     const { PDFDocument } = PDFLib;
-    this.pdfDoc = await PDFDocument.load(arrayBuffer);
+    this.pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
     this.originalBuffer = arrayBuffer.slice(0);
     this.currentFilePath = filePath;
     this.modified = false;
@@ -169,7 +169,7 @@ class PDFEditor {
     const { PDFDocument } = PDFLib;
 
     for (const buffer of pdfBuffers) {
-      const otherPdf = await PDFDocument.load(buffer);
+      const otherPdf = await PDFDocument.load(buffer, { ignoreEncryption: true });
       const pageIndices = Array.from({ length: otherPdf.getPageCount() }, (_, i) => i);
       const copiedPages = await this.pdfDoc.copyPages(otherPdf, pageIndices);
 

@@ -6,7 +6,11 @@
       "Bash(npm run copy-libs:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run build:win:*)",
+      "Bash(CSC_IDENTITY_AUTO_DISCOVERY=false WIN_CSC_LINK=\"\" npm run build:win)",
+      "Bash(unset:*)",
+      "Bash(CSC_IDENTITY_AUTO_DISCOVERY=false npm run build:win:*)"
     ]
   }
 }
