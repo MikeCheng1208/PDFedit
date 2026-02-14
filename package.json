@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "postinstall": "npm run copy-libs",
-    "copy-libs": "mkdir -p src/lib/pdfjs && cp node_modules/pdfjs-dist/build/pdf.mjs src/lib/pdfjs/ && cp node_modules/pdfjs-dist/build/pdf.worker.mjs src/lib/pdfjs/ && cp -r node_modules/pdfjs-dist/cmaps src/lib/pdfjs/ && cp -r node_modules/pdfjs-dist/standard_fonts src/lib/pdfjs/ && cp node_modules/fabric/dist/fabric.min.js src/lib/ && cp node_modules/pdf-lib/dist/pdf-lib.min.js src/lib/ && node -e \"const fs=require('fs');const f='src/lib/pdfjs/pdf.worker.mjs';let s=fs.readFileSync(f,'utf8');s=s.replace('properties.composite && (properties.cidToGidMap?.length > 0 || !(properties.cMap instanceof IdentityCMap))','properties.composite');fs.writeFileSync(f,s);console.log('Patched pdf.worker.mjs: isComposite fix')\"",
+    "copy-libs": "node scripts/copy-libs.js",
     "start": "electron .",
     "build": "electron-builder",
     "build:mac": "electron-builder --mac",
