@@ -45,6 +45,7 @@
 | Platform | Architecture | File | Minimum Version |
 |---|---|---|---|
 | **macOS** | Apple Silicon (arm64) | `.dmg` / `.zip` | macOS 10.15 (Catalina)+ |
+| **macOS** | Intel (x64) | `.dmg` / `.zip` | macOS 10.15 (Catalina)+ |
 | **Windows** | x64 (Intel / AMD) | `.exe` installer | Windows 10+ |
 
 > **Note**: macOS builds are not code-signed. On first launch, go to **System Preferences > Security & Privacy** to allow the app.
@@ -75,8 +76,14 @@ npm start
 ### Build
 
 ```bash
-# Build for macOS
+# Build for macOS (Apple Silicon, arm64)
 npm run build:mac
+
+# Build for macOS (Intel, x64)
+npm run build:mac:intel
+
+# Build for macOS (Universal — runs on both Apple Silicon and Intel)
+npm run build:mac:universal
 
 # Build for Windows (x64)
 npm run build:win

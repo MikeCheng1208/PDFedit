@@ -8,7 +8,9 @@
     "copy-libs": "node scripts/copy-libs.js",
     "start": "electron .",
     "build": "electron-builder",
-    "build:mac": "electron-builder --mac",
+    "build:mac": "electron-builder --mac --arm64",
+    "build:mac:intel": "electron-builder --mac --x64",
+    "build:mac:universal": "electron-builder --mac --universal",
     "build:win": "electron-builder --win --x64",
     "test": "jest"
   },
@@ -47,7 +49,17 @@
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "entitlements": "entitlements.mac.plist",
-      "entitlementsInherit": "entitlements.mac.plist"
+      "entitlementsInherit": "entitlements.mac.plist",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ]
     },
     "win": {
       "icon": "assets/icons/icon.png"
